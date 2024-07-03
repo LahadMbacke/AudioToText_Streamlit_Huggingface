@@ -1,25 +1,26 @@
 # pip install accelerate
 from pathlib import Path
 import streamlit as st
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+
 import torch
 
 token_path = Path("token.txt")
 token = token_path.read_text().strip()
 
-st.markdown("<h1 style='text-align: center; color: red;'>Text Generation</h1>", unsafe_allow_html=True)
-st.markdown("---------------")
+def page_text_generation():
 
-tokenizer = AutoTokenizer.from_pretrained("google/gemma-2-9b-it")
-model = AutoModelForCausalLM.from_pretrained(
-    "google/gemma-2-9b-it",
-    device_map="auto",
-    torch_dtype=torch.bfloat16
-)
+    st.markdown("<h1 style='text-align: center; color: red;'>Text Generation</h1>", unsafe_allow_html=True)
+    st.markdown("---------------")
 
-input_text = st.text_area("Enter your text here", "Write me a poem about Machine Learning.")
-input_ids = tokenizer(input_text, return_tensors="pt").to("cpu")
+    tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+    model = GPT2LMHeadModel.from_pretrained('gpt2')
+    text = st.text_area("Enter the text you want to generate")
 
-outputs = model.generate(**input_ids)
 
-st.write(tokenizer.decode(outputs[0]))
+    encoded_input = tokenizer.encode(text, return_tensors='pt')
+    output = model.generate(encoded_input, max_length=50, num_return_sequences=1)
+    decoded_string = tokenizer.decode(output[0], skip_special_tokens=True)
+
+
+    st.write(decoded_string)
