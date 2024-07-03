@@ -11,10 +11,12 @@ st.markdown("<h1 style='text-align: center; color: red;'>Named Entity Recognitio
 st.markdown("---------------")
 
 
-def page_text_generation():
+def page_ner():
+    result = []
     text = st.text_area("Enter the text you want to generate")
-    if st.butttton("Generate Token"):
+    if st.button("Generate Token"):
         nlp = pipeline('ner', model=model, tokenizer=tokenizer, aggregation_strategy="simple")
         result = nlp(text)
-        st.write(result)
-
+        
+        result  = [f"{item['word']} {item['entity_group']} " for item in result]
+        st.write(" ".join(result))

@@ -1,5 +1,6 @@
 import streamlit as st
 from text_generate import page_text_generation
+from ner import page_ner
 
 
 # Configuration du menu
@@ -10,4 +11,4 @@ choice = st.sidebar.selectbox("Menu", menu)
 if choice == "Génération de Texte":
     page_text_generation()
 elif choice == "Entité Nommée":
-    
+    page_ner()
